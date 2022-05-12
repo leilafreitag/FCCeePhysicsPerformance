@@ -2,8 +2,8 @@
 
 
 TChain* events = new TChain("events","events");
-events->Add("p8_ecm91GeV_Zbb_EvtGen_Bs2DsK_IDEAtrkCov_p10_v0.root");
-
+//events->Add("p8_ecm91GeV_Zbb_EvtGen_Bs2DsK_IDEAtrkCov_p10_v0.root");
+events->Add("evtGen_ecm91_Bs2DsK_FullSilicon.root");
 
 
 // Basic cut & acceptance : demand only one Bs decay to make it safer,

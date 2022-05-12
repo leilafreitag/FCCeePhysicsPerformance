@@ -32,6 +32,7 @@ print ('fccana   ',_fcc)
 # 	Note: these events were generated at (0,0,0), i.e.no smearing of the
 #	primary vertex.
 #
+#Filter=""
 
 class analysis():
 
@@ -42,13 +43,14 @@ class analysis():
             self.outname+=".root"
 
         #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.DisableImplicitMT()
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(1000)	# to test over 1000 events only
-        df2 = (self.df
+        df2 = (self.df.Range(1000000)	# to test over 1000 events only
+#        df2 = (self.df
 
                .Alias("Particle1", "Particle#1.index")
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
@@ -58,7 +60,13 @@ class analysis():
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
+               # the recoParticles corresponding  to the tracks that are primaries, according to MC-matching :
+               .Define("MC_PrimaryTracks_RP",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
+               # and the corresponding tracks :
+               .Define("MC_PrimaryTracks",  "ReconstructedParticle2Track::getRP2TRK( MC_PrimaryTracks_RP, EFlowTrack_1)" )
+
                # number of tracks in the event
+               .Define("ntracks_Primary","ReconstructedParticle2Track::getTK_n(MC_PrimaryTracks)")
                .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Retrieve the decay vertex of all MC particles
@@ -105,7 +113,8 @@ class analysis():
                .Define("Bs_theta",   "MCParticle::get_theta( Bs )")
                .Define("Bs_phi",   "MCParticle::get_phi( Bs )")
                .Define("Bs_e",   "MCParticle::get_e( Bs )")
-
+               .Define("Bs_pt",   "MCParticle::get_pt( Bs )")               
+               .Define("n_Bs", "MCParticle::get_n( Bs )" )
                
                # Decay vertex of the Bs (MC)
                # Careful with getMC_decayVertex: if Bs -> Bsbar, this returns the prod vertex of the Bsbar !
@@ -134,6 +143,9 @@ class analysis():
                .Define("BsVertexObject",   "VertexFitterSimple::VertexFitter_Tk( 2, BsTracks)" )
                # from which we extract the edm4hep::VertexData object, which contains the vertex positiob in mm
                .Define("BsVertex",  "VertexingUtils::get_VertexData( BsVertexObject )")
+
+
+
 
 
 	       # We may want to look at the reco'ed Bs legs: in the BsRecoParticles vector, 
@@ -215,6 +227,7 @@ class analysis():
 	       .Define("RecoMuplus_d0",  "ReconstructedParticle2Track::getRP2TRK_D0( RecoMuplus, EFlowTrack_1) ")
 	       .Define("RecoMuplus_z0",  "ReconstructedParticle2Track::getRP2TRK_Z0( RecoMuplus, EFlowTrack_1) ")
 
+#               .Filter(Filter)
 
         )
 
@@ -224,6 +237,9 @@ class analysis():
         for branchName in [
                 "MC_PrimaryVertex",
                 "ntracks",
+                "ntracks_Primary",
+                "MC_PrimaryTracks_RP",
+                "MC_PrimaryTracks",
                 #"Bs2JPsiPhi_indices",
                 #"Bs2MuMuKK_indices",
                 #"Muplus",
@@ -245,9 +261,10 @@ class analysis():
                 "Kminus_phi",
                 "Kminus_e",
                 "Bs_theta",
+				"n_Bs",
                 "Bs_phi",
                 "Bs_e",
-
+                "Bs_pt",
                 "Bsdecay",
                 "Bsbardecay",
 
@@ -310,7 +327,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

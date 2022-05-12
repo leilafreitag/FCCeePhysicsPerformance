@@ -7,7 +7,7 @@ ROOT.gSystem.Load("libpodio")
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gSystem.Load("libFCCAnalysesFlavour")
 
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
+ROOT.gErrorIgnoreLevel = ROOT.kInfo
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
@@ -74,6 +74,10 @@ class analysis():
 
                # the MC Bs :
                .Define("Bs",  "selMC_leg(0) ( Bs2DsK_indices, Particle )")
+               .Define("Bs_E",  "MCParticle::get_e( Bs )")
+			   .Define("Bs_theta", "MCParticle::get_theta( Bs )")
+			   .Define("n_Bs", "MCParticle::get_n( Bs )" )
+
                # the MC Ds :
                .Define("Ds",  "selMC_leg(1) ( Bs2DsK_indices, Particle )")
                # the MC bachelor K- from the Bs decay :
@@ -202,7 +206,10 @@ class analysis():
                 #"MC_PrimaryVertex",
                 #"ntracks",
                 "Bs",
-                #"Ds",
+				"Bs_E",
+				"Bs_theta",
+				"n_Bs",
+                "Ds",
                 #"BachelorK",
                 "Ds_E",
                 "Ds_pt",
