@@ -4,6 +4,8 @@ include(${ROOT_USE_FILE})
 
 find_package(EDM4HEP)
 find_package(podio)
+find_package(FastJet)
+
 # Until root properly exports its vdt include dirs, include it explicitly
 find_package(Vdt)
 

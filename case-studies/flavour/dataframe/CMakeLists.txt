@@ -9,13 +9,15 @@ include(${ROOT_USE_FILE})
 find_package(EDM4HEP)
 find_package(podio)
 
-
 # Define basic build settings
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
 
-
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+find_package(FastJet)
+
+include_directories(${FASTJET_INCLUDE_DIR})
+target_link_libraries(fastjet::fastjet)
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")

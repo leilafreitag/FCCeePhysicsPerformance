@@ -49,7 +49,7 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(1000000)	# to test over 1000 events only
+        df2 = (self.df.Range(100000)	# to test over 1000 events only
 #        df2 = (self.df
 
                .Alias("Particle1", "Particle#1.index")
@@ -58,7 +58,7 @@ class analysis():
 
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # the recoParticles corresponding  to the tracks that are primaries, according to MC-matching :
                .Define("MC_PrimaryTracks_RP",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
@@ -70,7 +70,7 @@ class analysis():
                .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Retrieve the decay vertex of all MC particles
-               #.Define("MC_DecayVertices",  "MCParticle::get_endPoint( Particle, Particle1)" )
+               #.Define("MC_DecayVertices",  "FCCAnalyses::MCParticle::get_endPoint( Particle, Particle1)" )
 
 
                # MC indices of the decay Bs (PDG = 531) -> mu+ (PDG = -13) mu- (PDG = 13) K+ (PDG = 321) K- (PDG = -321)
@@ -84,7 +84,7 @@ class analysis():
                # If the event contains more than one such decays,only the first one is kept.
 	       # get_indices_ExclusiveDecay looks for an exclusive decay: if a mother is found, that decays 
                # into the particles specified in the list plus other particle(s), this decay is not selected.
-               .Define("Bs2MuMuKK_indices",  "MCParticle::get_indices_ExclusiveDecay( 531, {-13,13,321,-321}, true, true) ( Particle, Particle1)" )
+               .Define("Bs2MuMuKK_indices",  "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( 531, {-13,13,321,-321}, true, true) ( Particle, Particle1)" )
 
                 # the MC Bs : the Bs is the first particle in the Bs2MuMuKK_indices vector
                .Define("Bs",  "selMC_leg(0) ( Bs2MuMuKK_indices, Particle )")
@@ -96,25 +96,25 @@ class analysis():
                .Define("Kminus",  " selMC_leg(4)( Bs2MuMuKK_indices, Particle )")
 
                 # Kinematics of the Bs legs (MC) :
-               .Define("Muplus_theta",  "MCParticle::get_theta( Muplus )")
-               .Define("Muplus_phi",  "MCParticle::get_phi( Muplus )")
-               .Define("Muplus_e",  "MCParticle::get_e( Muplus )")
-               .Define("Muminus_theta",  "MCParticle::get_theta( Muminus )")
-               .Define("Muminus_phi",  "MCParticle::get_phi( Muminus )")
-               .Define("Muminus_e",  "MCParticle::get_e( Muminus )")
-               .Define("Kplus_theta",  "MCParticle::get_theta( Kplus )")
-               .Define("Kplus_phi",  "MCParticle::get_phi( Kplus )")
-               .Define("Kplus_e",  "MCParticle::get_e( Kplus )")
-               .Define("Kminus_theta",  "MCParticle::get_theta( Kminus )")
-               .Define("Kminus_phi",  "MCParticle::get_phi( Kminus )")
-               .Define("Kminus_e",  "MCParticle::get_e( Kminus )")
+               .Define("Muplus_theta",  "FCCAnalyses::MCParticle::get_theta( Muplus )")
+               .Define("Muplus_phi",  "FCCAnalyses::MCParticle::get_phi( Muplus )")
+               .Define("Muplus_e",  "FCCAnalyses::MCParticle::get_e( Muplus )")
+               .Define("Muminus_theta",  "FCCAnalyses::MCParticle::get_theta( Muminus )")
+               .Define("Muminus_phi",  "FCCAnalyses::MCParticle::get_phi( Muminus )")
+               .Define("Muminus_e",  "FCCAnalyses::MCParticle::get_e( Muminus )")
+               .Define("Kplus_theta",  "FCCAnalyses::MCParticle::get_theta( Kplus )")
+               .Define("Kplus_phi",  "FCCAnalyses::MCParticle::get_phi( Kplus )")
+               .Define("Kplus_e",  "FCCAnalyses::MCParticle::get_e( Kplus )")
+               .Define("Kminus_theta",  "FCCAnalyses::MCParticle::get_theta( Kminus )")
+               .Define("Kminus_phi",  "FCCAnalyses::MCParticle::get_phi( Kminus )")
+               .Define("Kminus_e",  "FCCAnalyses::MCParticle::get_e( Kminus )")
 
 	       # Kinematics of the mother Bs (MC)
-               .Define("Bs_theta",   "MCParticle::get_theta( Bs )")
-               .Define("Bs_phi",   "MCParticle::get_phi( Bs )")
-               .Define("Bs_e",   "MCParticle::get_e( Bs )")
-               .Define("Bs_pt",   "MCParticle::get_pt( Bs )")               
-               .Define("n_Bs", "MCParticle::get_n( Bs )" )
+               .Define("Bs_theta",   "FCCAnalyses::MCParticle::get_theta( Bs )")
+               .Define("Bs_phi",   "FCCAnalyses::MCParticle::get_phi( Bs )")
+               .Define("Bs_e",   "FCCAnalyses::MCParticle::get_e( Bs )")
+               .Define("Bs_pt",   "FCCAnalyses::MCParticle::get_pt( Bs )")               
+               .Define("n_Bs", "FCCAnalyses::MCParticle::get_n( Bs )" )
                
                # Decay vertex of the Bs (MC)
                # Careful with getMC_decayVertex: if Bs -> Bsbar, this returns the prod vertex of the Bsbar !
@@ -189,7 +189,7 @@ class analysis():
                # If the event contains more than one such decays,only the first one is kept.
                # get_indices_ExclusiveDecay looks for an exclusive decay: if a mother is found, that decays 
                # into the particles specified in the list plus other particle(s), this decay is not selected.
-               .Define("Bs2JPsiPhi_indices",   "MCParticle::get_indices_ExclusiveDecay( 531, {443,333}, false, true) ( Particle, Particle1)" )
+               .Define("Bs2JPsiPhi_indices",   "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( 531, {443,333}, false, true) ( Particle, Particle1)" )
 
                # This extracts the MC Jpsi. In list of indices determined above, Bs2JPsiPhi_indices,
                # 1 is the position of the Jpsi in the Bs2JPsiPhi_indices vector.
@@ -198,7 +198,7 @@ class analysis():
                .Define("Phi",   "selMC_leg( 2) ( Bs2JPsiPhi_indices , Particle )")
 
                # From these two MC particles, determine their angular separation
-               .Define("Angle_JpsiPhi",  "MCParticle::AngleBetweenTwoMCParticles( JPsi, Phi)" )
+               .Define("Angle_JpsiPhi",  "FCCAnalyses::MCParticle::AngleBetweenTwoMCParticles( JPsi, Phi)" )
 
 
 
@@ -220,13 +220,70 @@ class analysis():
                # not so useful here, but for completeness : Bs to JPsi decay ?
                # Returns booleans. e.g. the first one means that the event contains a Bs that decayed to a JPsi (443) + X, 
                # not counting the cases where Bs -> Bsbar -> JPsi + X
-               .Define("Bsdecay",  "MCParticle::get_decay(531, 443, false)(Particle, Particle1)")
-               .Define("Bsbardecay",  "MCParticle::get_decay(-531, 443, false)(Particle, Particle1)")
+               .Define("Bsdecay",  "FCCAnalyses::MCParticle::get_decay(531, 443, false)(Particle, Particle1)")
+               .Define("Bsbardecay",  "FCCAnalyses::MCParticle::get_decay(-531, 443, false)(Particle, Particle1)")
 
-	       # to get the distribution of the d0 of the mu+ track
-	       .Define("RecoMuplus_d0",  "ReconstructedParticle2Track::getRP2TRK_D0( RecoMuplus, EFlowTrack_1) ")
-	       .Define("RecoMuplus_z0",  "ReconstructedParticle2Track::getRP2TRK_Z0( RecoMuplus, EFlowTrack_1) ")
+	            # to get the distribution of the d0 of the mu+ track
+	            .Define("RecoMuplus_d0",  "ReconstructedParticle2Track::getRP2TRK_D0( RecoMuplus, EFlowTrack_1) ")
+	            .Define("RecoMuplus_z0",  "ReconstructedParticle2Track::getRP2TRK_Z0( RecoMuplus, EFlowTrack_1) ")
 
+
+
+
+
+
+
+                ### SV stuff ###
+#               # jet clustering (ee-kt) before reconstructing SVs in event
+               .Define("RP_px",  "ReconstructedParticle::get_px(ReconstructedParticles)")
+               .Define("RP_py",  "ReconstructedParticle::get_py(ReconstructedParticles)")
+               .Define("RP_pz",  "ReconstructedParticle::get_pz(ReconstructedParticles)")
+               .Define("RP_e",   "ReconstructedParticle::get_e(ReconstructedParticles)")
+#               #build psedo-jets with the Reconstructed final particles
+               .Define("pseudo_jets", "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+#               #run jet clustering with all reco particles. ee_kt_algorithm, exclusive clustering, exactly 2 jets, E-scheme
+               .Define("FCCAnalysesJets_ee_kt", "JetClustering::clustering_ee_kt(2, 2, 1, 0)(pseudo_jets)")
+#               #get the jets out of the structure
+               .Define("jets_ee_kt", "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_kt)")
+#               #get the jet constituents out of the structure
+               .Define("jetconstituents_ee_kt", "JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)")
+
+               ### finding SVs in the event ###
+               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
+               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
+
+               .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               .Define("IsPrimary_based_on_reco",  "VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1, RecoedPrimaryTracks  )")
+
+               # Event level
+               .Define("SV", "VertexFitterSimple::get_SV_event(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco)") # first interface
+               #.Define("SV", "VertexFitterSimple::get_SV_event(ReconstructedParticles, EFlowTrack_1, SecondaryTracks, PrimaryVertexObject)")        # second interface
+
+               # From jets
+               #.Define("SV", "VertexFitterSimple::get_SV_jets(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents_ee_kt)")
+
+               # SV properties
+               .Define("SV_position", "VertexingUtils::get_position_SV( SV )")
+               .Define("ntracks_SV", "VertexingUtils::get_VertexNtrk(SV.vtx)")
+               .Define("n_SV", "VertexingUtils::get_n_SV(SV)")
+               .Define("SV_mass", "myUtils::get_Vertex_mass( SV.vtx, ReconstructedParticles )")
+               .Define("SV_mass_twoPions", "VertexingUtils::get_invM_pairs(SV.vtx)")
+               .Define("SV_mass_allPions", "VertexingUtils::get_invM(SV.vtx)")
+               .Define("SV_chi2", "VertexingUtils::get_chi2_SV(SV)")
+               .Define("d2PV", "myUtils::get_Vertex_d2PV(VertexFitterSimple::get_all_vertices(PrimaryVertexObject, SV), 0)")
+               .Define("d2PV_min", "myUtils::get_dPV2DV_min(d2PV)")
+               .Define("d2PV_max", "myUtils::get_dPV2DV_max(d2PV)")
+               .Define("d2PV_ave", "myUtils::get_dPV2DV_ave(d2PV)")
+
+
+               .Define("reco_chi2", "PrimaryVertexObject.reco_chi2")
+               .Define("chi2_2", "PrimaryVertexObject.vertex.chi2")           
+
+               .Define("d_SV_BsMCDecayVertex","VertexingUtils::get_d3d_SV_obj(SV.vtx, BsMCDecayVertex)" )
+               .Define("dR_SV_BsMCDecayVertex","VertexingUtils::get_dR_SV_obj(SV.vtx, BsMCDecayVertex)" )
+               .Define("dR_min_SV_BsMCDecayVertex","myFinalSel::get_abs_min(dR_SV_BsMCDecayVertex)")
+
+               .Define("d_min_SV_BsMCDecayVertex","myFinalSel::get_abs_min(d_SV_BsMCDecayVertex)")
 #               .Filter(Filter)
 
         )
@@ -235,11 +292,28 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
+                "IsPrimary_based_on_reco",
+                "SV",
+                "SV_position",
+                "n_SV",
+                "SV_mass",
+                "SV_mass_twoPions",
+                "SV_mass_allPions",
+                "SV_chi2",
+                "d2PV",
+                "d2PV_min",
+                "d2PV_max",
+                "d2PV_ave",
                 "MC_PrimaryVertex",
                 "ntracks",
                 "ntracks_Primary",
                 "MC_PrimaryTracks_RP",
                 "MC_PrimaryTracks",
+                "d_SV_BsMCDecayVertex",
+                "d_min_SV_BsMCDecayVertex",
+                "dR_SV_BsMCDecayVertex",
+                "dR_min_SV_BsMCDecayVertex",
+                "FCCAnalysesJets_ee_kt",
                 #"Bs2JPsiPhi_indices",
                 #"Bs2MuMuKK_indices",
                 #"Muplus",

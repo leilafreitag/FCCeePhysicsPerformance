@@ -1,7 +1,7 @@
 #include "Bs2JPsiPhi.h"
 #include <iostream>
 
-using namespace MCParticle;
+using namespace FCCAnalyses::MCParticle;
 using namespace VertexFitterSimple;
 using namespace VertexingUtils;
 
