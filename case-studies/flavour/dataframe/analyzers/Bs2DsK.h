@@ -50,7 +50,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_Bs_vertex(ROOT::
 ROOT::VecOps::RVec<edm4hep::TrackState>  
 ReconstructedDs_atVertex_TrackState_withCovariance (ROOT::VecOps::RVec<edm4hep::TrackState> DsTracks,
 						    ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState,
-						    VertexingUtils::FCCAnalysesVertex centralVertex ) ;
+						    FCCAnalyses::VertexingUtils::FCCAnalysesVertex centralVertex ) ;
 
 ROOT::VecOps::RVec<edm4hep::TrackState>  
 tracks_for_fitting_the_Bs_vertex(ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState_withCovariance,

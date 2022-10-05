@@ -5,9 +5,7 @@
 #include <iostream>
 
 using namespace FCCAnalyses::MCParticle;
-using namespace VertexFitterSimple;
 
-using namespace VertexingUtils;
 
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -162,7 +160,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState( RO
  //momentum = MCmomentum;
 
         // get the corresponding track parameters using Franco's code 
-        TVectorD track_param = XPtoPar( vertex, momentum, theDs.charge );
+        TVectorD track_param = FCCAnalyses::VertexFitterSimple::XPtoPar( vertex, momentum, theDs.charge );
 
         edm4hep::TrackState track;
         track.D0        = track_param[0] * 1e3 ; // from meters to mm
@@ -181,18 +179,21 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState( RO
         track.referencePoint.z = vertex[2];
 
         // assume here that the parameters are perfectly measured
-        std::array<float, 15> covMatrix;
-        for (int icov=0; icov < 15; icov++) {
+        std::array<float, 21> covMatrix;
+        for (int icov=0; icov < 21; icov++) {
            covMatrix[icov] = 0;
         }
         // diagonal terms: take error = 5% of the parameter
         float arbitrary_value = 0.05 ;
 	//float arbitrary_value = 2.;   // 200% !!
+
+        // TO BE ADJUSTED TO USING 21 ELEMENTS IN MATRIX!
         covMatrix[0] = pow( arbitrary_value * track_param[0] ,2);
         covMatrix[2] = pow( arbitrary_value * track_param[1] , 2);
         covMatrix[5] = pow( arbitrary_value * track_param[2] , 2) ;
         covMatrix[9] = pow( arbitrary_value * track_param[3] , 2);
         covMatrix[14] = pow( arbitrary_value* track_param[4] , 2);
+        
         track.covMatrix = covMatrix;
 
         result.push_back( track );
@@ -247,7 +248,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_Bs_vertex(
 ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState_withCovariance ( 
 			ROOT::VecOps::RVec<edm4hep::TrackState> DsTracks,
 			ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState,
-			FCCAnalysesVertex centralVertex ) {
+			FCCAnalyses::VertexingUtils::FCCAnalysesVertex centralVertex ) {
 
 // more complicated: one wants here the TrackState of the Reco'ed Ds at the vertex but now,
 // with the covariance matrix determined "properly" (in order to use this TrackState in
@@ -371,7 +372,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState_wit
  	}  // end loop over the DsTracks
 
 	// Run the vertex fitter over the smeared Ds legs
-	FCCAnalysesVertex vertexObject = VertexFitter_Tk(3, modified_trackStates );
+    FCCAnalyses::VertexingUtils::FCCAnalysesVertex vertexObject = FCCAnalyses::VertexFitterSimple::VertexFitter_Tk(3, modified_trackStates );
 	  //FCCAnalysesVertex vertexObject = centralVertex ;    // to check mem leak ... 
         //std::cout << " Fitted Ds vertex: " << vertexObject.vertex.position.x << " " << vertexObject.vertex.position.y << " " << vertexObject.vertex.position.z << std::endl;
 
@@ -403,7 +404,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedDs_atVertex_TrackState_wit
         TVector3 themomentum( theDs.momentum.x, theDs.momentum.y, theDs.momentum.z );
         //std::cout << " the vertex " << thevtx.x() << " " << thevtx.y() << " " << thevtx.z() << std::endl;
         //std::cout << " the momentum " << themomentum.x() << " " << themomentum.y() << " " << themomentum.z() << std::endl;
-	TVectorD Ds_track_param = XPtoPar( thevtx, themomentum, theDs.charge );
+	TVectorD Ds_track_param = FCCAnalyses::VertexFitterSimple::XPtoPar( thevtx, themomentum, theDs.charge );
         edm4hep::TrackState track;
         track.D0        = Ds_track_param[0] * 1e3 ; // from meters to mm
         track.phi       = Ds_track_param[1];

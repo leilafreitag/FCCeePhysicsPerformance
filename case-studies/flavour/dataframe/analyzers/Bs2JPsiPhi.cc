@@ -2,8 +2,6 @@
 #include <iostream>
 
 using namespace FCCAnalyses::MCParticle;
-using namespace VertexFitterSimple;
-using namespace VertexingUtils;
 
 
 // the decay vertex of the Bs that decayed to mu mu KK; the indices
@@ -82,7 +80,7 @@ selRP_leg_atVertex::selRP_leg_atVertex(int idx) {
 };
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selRP_leg_atVertex::operator() ( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> BsRecoParticles,
-				FCCAnalysesVertex    BsDecayVertex,
+				FCCAnalyses::VertexingUtils::FCCAnalysesVertex    BsDecayVertex,
 				ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> res;

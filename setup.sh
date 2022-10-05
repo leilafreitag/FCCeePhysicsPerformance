@@ -10,5 +10,5 @@ source ./localSetup.sh
 rm -rf build install
 mkdir build install
 cd build/
-cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/a/afehr/FCCAnalyses_kunal/install/include/FCCAnalyses
+cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/a/afehr/FCCAnalyses/install/include/FCCAnalyses
 make install

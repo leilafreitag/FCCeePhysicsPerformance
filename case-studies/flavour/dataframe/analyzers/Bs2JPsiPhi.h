@@ -43,7 +43,7 @@ struct selRP_leg_atVertex{
   selRP_leg_atVertex( int idx );
   int m_idx;
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> BsRecoParticles,
-								     VertexingUtils::FCCAnalysesVertex BsDecayVertex,
+								     FCCAnalyses::VertexingUtils::FCCAnalysesVertex BsDecayVertex,
 								     ROOT::VecOps::RVec<edm4hep::TrackState> tracks) ;
 };
 
