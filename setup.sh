@@ -1,4 +1,4 @@
-path=/afs/cern.ch/user/a/afehr/FCCAnalyses 	# Default one
+path=/afs/cern.ch/user/l/lfreitag/FCCAnalyses 	# Default one
 
 cd case-studies/flavour/
 
@@ -10,5 +10,8 @@ source ./localSetup.sh
 rm -rf build install
 mkdir build install
 cd build/
-cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/a/afehr/FCCAnalyses/install/include/FCCAnalyses
+
+cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/l/lfreitag/FCCAnalyses/install/include/FCCAnalyses
+#cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/l/lfreitag/FCCAnalyses/analyzers/dataframe/FCCAnalyses
+#cmake .. -DCMAKE_INSTALL_PREFIX=../install -DFCCANALYSES_INCLUDE_PATH=/afs/cern.ch/user/a/afehr/FCCAnalyses/install/include/FCCAnalyses
 make install

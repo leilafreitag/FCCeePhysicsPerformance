@@ -13,9 +13,6 @@ _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
 _bs  = ROOT.dummyLoaderFlavour
 
-
-
-
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
@@ -34,23 +31,13 @@ print ('fccana   ',_fcc)
 #
 #Filter=""
 
-class analysis():
 
-    #__________________________________________________________
-    def __init__(self, inputlist, outname, ncpu):
-        self.outname = outname
-        if ".root" not in outname:
-            self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
-        ROOT.ROOT.DisableImplicitMT()
+class RDFanalysis():
 
-        self.df = ROOT.RDataFrame("events", inputlist)
-        print (" done")
-    #__________________________________________________________
-    def run(self):
-        df2 = (self.df.Range(100000)	# to test over 1000 events only
-#        df2 = (self.df
+    def analysers(df):
+        
+        df2 = (df
 
                .Alias("Particle1", "Particle#1.index")
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
@@ -140,12 +127,9 @@ class analysis():
 
                # Now we reconstruct the Bs decay vertex using the reco'ed tracks.
                # First the full object, of type Vertexing::FCCAnalysesVertex
-               .Define("BsVertexObject",   "VertexFitterSimple::VertexFitter_Tk( 2, BsTracks)" )
+               .Define("BsVertexObject",   "FCCAnalyses::VertexFitterSimple::VertexFitter_Tk( 2, BsTracks)" )
                # from which we extract the edm4hep::VertexData object, which contains the vertex positiob in mm
                .Define("BsVertex",  "VertexingUtils::get_VertexData( BsVertexObject )")
-
-
-
 
 
 	       # We may want to look at the reco'ed Bs legs: in the BsRecoParticles vector, 
@@ -249,28 +233,28 @@ class analysis():
                .Define("jetconstituents_ee_kt", "JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)")
 
                ### finding SVs in the event ###
-               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
-               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
+               .Define("VertexObject_allTracks",  "FCCAnalyses::VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
+               .Define("RecoedPrimaryTracks",  "FCCAnalyses::VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
 
-               .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
-               .Define("IsPrimary_based_on_reco",  "VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1, RecoedPrimaryTracks  )")
+               .Define("PrimaryVertexObject",   "FCCAnalyses::VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               .Define("IsPrimary_based_on_reco",  "FCCAnalyses::VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1, RecoedPrimaryTracks  )")
 
                # Event level
-               .Define("SV", "VertexFitterSimple::get_SV_event(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco)") # first interface
-               #.Define("SV", "VertexFitterSimple::get_SV_event(ReconstructedParticles, EFlowTrack_1, SecondaryTracks, PrimaryVertexObject)")        # second interface
+               .Define("SV", "FCCAnalyses::VertexFinderLCFIPlus::get_SV_event(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco)") # first interface
+               #.Define("SV", "FCCAnalyses::VertexFinderLCFIPlus::get_SV_event(ReconstructedParticles, EFlowTrack_1, SecondaryTracks, PrimaryVertexObject)")        # second interface
 
                # From jets
-               #.Define("SV", "VertexFitterSimple::get_SV_jets(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents_ee_kt)")
+               #.Define("SV", "FCCAnalyses::VertexFinderLCFIPlus::get_SV_jets(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents_ee_kt)")
 
                # SV properties
                .Define("SV_position", "VertexingUtils::get_position_SV( SV )")
-               .Define("ntracks_SV", "VertexingUtils::get_VertexNtrk(SV.vtx)")
+               .Define("ntracks_SV", "VertexingUtils::get_VertexNtrk(SV)")
                .Define("n_SV", "VertexingUtils::get_n_SV(SV)")
-               .Define("SV_mass", "myUtils::get_Vertex_mass( SV.vtx, ReconstructedParticles )")
-               .Define("SV_mass_twoPions", "VertexingUtils::get_invM_pairs(SV.vtx)")
-               .Define("SV_mass_allPions", "VertexingUtils::get_invM(SV.vtx)")
+               .Define("SV_mass", "myUtils::get_Vertex_mass( SV, ReconstructedParticles )")
+               .Define("SV_mass_twoPions", "VertexingUtils::get_invM_pairs(SV)")
+               .Define("SV_mass_allPions", "VertexingUtils::get_invM(SV)")
                .Define("SV_chi2", "VertexingUtils::get_chi2_SV(SV)")
-               .Define("d2PV", "myUtils::get_Vertex_d2PV(VertexFitterSimple::get_all_vertices(PrimaryVertexObject, SV), 0)")
+               .Define("d2PV", "myUtils::get_Vertex_d2PV(FCCAnalyses::VertexingUtils::get_all_vertices(PrimaryVertexObject, SV), 0)")
                .Define("d2PV_min", "myUtils::get_dPV2DV_min(d2PV)")
                .Define("d2PV_max", "myUtils::get_dPV2DV_max(d2PV)")
                .Define("d2PV_ave", "myUtils::get_dPV2DV_ave(d2PV)")
@@ -279,19 +263,18 @@ class analysis():
                .Define("reco_chi2", "PrimaryVertexObject.reco_chi2")
                .Define("chi2_2", "PrimaryVertexObject.vertex.chi2")           
 
-               .Define("d_SV_BsMCDecayVertex","VertexingUtils::get_d3d_SV_obj(SV.vtx, BsMCDecayVertex)" )
-               .Define("dR_SV_BsMCDecayVertex","VertexingUtils::get_dR_SV_obj(SV.vtx, BsMCDecayVertex)" )
+               .Define("d_SV_BsMCDecayVertex","VertexingUtils::get_d3d_SV_obj(SV, BsMCDecayVertex)" )
+               .Define("dR_SV_BsMCDecayVertex","VertexingUtils::get_dR_SV_obj(SV, BsMCDecayVertex)" )
                .Define("dR_min_SV_BsMCDecayVertex","myFinalSel::get_abs_min(dR_SV_BsMCDecayVertex)")
 
                .Define("d_min_SV_BsMCDecayVertex","myFinalSel::get_abs_min(d_SV_BsMCDecayVertex)")
 #               .Filter(Filter)
+            )
+        return df2
 
-        )
-
-
+    def output():
         # select branches for output file
-        branchList = ROOT.vector('string')()
-        for branchName in [
+        branchList = [
                 "IsPrimary_based_on_reco",
                 "SV",
                 "SV_position",
@@ -381,32 +364,5 @@ class analysis():
 
 		"RecoMuplus_d0",
 		"RecoMuplus_z0"
-
-
-                ]:
-            branchList.push_back(branchName)
-        df2.Snapshot("events", self.outname, branchList)
-
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv)==1:
-        print ("usage:")
-        print ("python ",sys.argv[0]," file.root")
-        sys.exit(3)
-    infile = sys.argv[1]
-    #outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
-    outDir = './'
-    import os
-    os.system("mkdir -p {}".format(outDir))
-    outfile = outDir+infile.split('/')[-1]
-    ncpus = 1
-    analysis = analysis(infile, outfile, ncpus)
-    analysis.run()
-
-    tf = ROOT.TFile(infile)
-    entries = tf.events.GetEntries()
-    p = ROOT.TParameter(int)( "eventsProcessed", entries)
-    outf=ROOT.TFile(outfile,"UPDATE")
-    p.Write()
+                ]
+        return branchList
