@@ -237,6 +237,7 @@ class RDFanalysis():
                .Define("RecoedPrimaryTracks",  "FCCAnalyses::VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
 
                .Define("PrimaryVertexObject",   "FCCAnalyses::VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               .Define("Reco_PrimaryVertex",  "VertexingUtils::get_VertexData( PrimaryVertexObject )")
                .Define("IsPrimary_based_on_reco",  "FCCAnalyses::VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1, RecoedPrimaryTracks  )")
 
                # Event level
@@ -363,6 +364,7 @@ class RDFanalysis():
                 "Angle_JpsiPhi",
 
 		"RecoMuplus_d0",
-		"RecoMuplus_z0"
+		"RecoMuplus_z0",
+                "Reco_PrimaryVertex"
                 ]
         return branchList
